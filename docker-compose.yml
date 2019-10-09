@@ -1,0 +1,67 @@
+version: '2'
+# define all services
+services:
+
+  #######################################
+  # Cakephp
+  #######################################
+  qrcode:
+    # we want to use the image which is build from our Dockerfile
+    build: .
+    # apache is running on port 80 but we want to expose this to port 4000 on our local machine
+    ports:
+      - "4000:80"
+    # we depending on the mysql backend
+    depends_on:
+      - mysql
+    # we mount the working dir into the container, handy for development
+    volumes:
+      - .:/var/www/html/
+    networks:
+      - qrcode-mockapp-network
+
+  #######################################
+  # MySQL server
+  #######################################
+  mysql:
+    # we use the mysql base image, version 5.5.62
+    image: mysql:5.5
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    volumes:
+      # we mount a datavolume to make sure we don't loose data
+       - mysql_data:/var/lib/mysql
+       # Execute mysql scripts in Docker/provision/mysql/init
+       - ./docker/config/mysql:/docker-entrypoint-initdb.d
+    # setting some envvars
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=daito_kentaku
+    ports:
+      - 4200:3306
+    networks:
+      - qrcode-mockapp-network
+
+  #######################################
+  # phpMyAdmin
+  #######################################
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_PORT: 3306
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: secret
+    ports:
+      - "4100:80"
+    restart: always
+    depends_on:
+    - mysql
+    networks:
+      - qrcode-mockapp-network
+
+networks:
+  qrcode-mockapp-network:
+    driver: bridge
+
+volumes:
+    mysql_data:
