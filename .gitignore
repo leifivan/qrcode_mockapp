@@ -1,0 +1,14 @@
+# User specific & automatically generated files #
+#################################################
+/app/Config/config.php
+/app/Config/database.php
+/app/tmp
+/asset/node_modules
+/lib/Cake/Console/Templates/skel/tmp/
+/plugins
+/vendors
+/node_modules/
+/build
+/dist
+/tags
+*.mo
