@@ -1,4 +1,13 @@
 # QR Code Generator
+
+# Generate QR Code using
+
+1. Google Infographics API: https://developers.google.com/chart/infographics/docs/qr_codes
+
+2. Javascript
+
+3. PHP
+
 # Specs
 
 Cakephp 2
